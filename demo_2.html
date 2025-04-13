@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>计算器</title>
+</head>
+<style>
+    #box{
+        height: 584px;
+        width: 340px;
+        /* background-color: darkgray; */
+        margin: 80px auto;
+    }
+    #Status_Bar{
+        /* width: 324px; */
+        width: 327px;
+        height: 58px;
+        background-color:rgb(0, 0, 0);
+        /* background-color:rgb(0, 0, 100); */
+        border-radius:18px 18px 0 0;
+        padding-left: 13px;
+    }
+    #Monitor{
+        /* width: 324px; */
+        width: 340px;
+        height: 116px;
+        background-color: rgb(0, 0, 0);
+        /* background-color: rgb(0, 100, 0); */
+        color:aliceblue;
+        text-align: right;
+        line-height:80px;
+        font-size:30px;
+        /* display: flex;
+        justify-content: flex-end;
+        align-items: flex-end; */
+    }
+    #Button{
+        /* width: 324px; */
+        width: 330px;
+        height: 412px;
+        background-color: rgb(0, 0, 0);
+        border-radius:0 0 18px 18px;
+        padding-left: 8px;
+        padding-right: 2px;
+        
+    }
+    #Button div{
+        width: 75px;
+        height: 75px;
+        float: left;
+        /* background-color:aliceblue; */
+        margin: 3px;
+        border-radius: 50%;
+        text-align:center;
+        line-height:75px;
+        font-size:24px;
+        font-weight: bold;
+
+    }
+    div[name='Special']{
+        background-color:rgb(165, 165, 165) ;
+        color: rgb(0, 0, 0);
+    }
+    div[name='Operators']{
+        background-color: rgb(255, 159, 10);
+        color: rgb(255, 248, 238);
+    }
+    div[name='Number']{
+        background-color: rgb(51, 51, 51);
+        color: rgb(255, 255, 255);
+    }
+    #time{
+        color: rgb(255, 255, 255);
+        font-size:14px;
+        font-weight: bold;
+    }
+    .Button.xy sup {
+    vertical-align: top;   
+    font-size: 0.5em;       
+    position: relative;
+    top: -0.6em;           
+    }
+    /* div[name='Special']:hover {
+    background-color: rgb(200, 200, 200);  
+    transform: scale(1.2);  
+    transition: all 0.2s ease;   
+    }
+    div[name='Operators']:hover {
+        background-color: rgb(255, 180, 50); 
+        transform: scale(1.2);
+        transition: all 0.2s ease;
+    }
+    div[name='Number']:hover {
+        background-color: rgb(80, 80, 80); 
+        transform: scale(1.2);
+        transition: all 0.2s ease;
+    } */
+</style>
+<script>
+        //获取时间
+    setInterval(function () {
+        const date = new Date();
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
+        const time= `${hours}:${minutes}:${seconds}`;
+        document.getElementById('time').innerText=time
+    },1000)    
+        //给按钮添加点击事件
+    function addon(){
+        let ButtonObj=document.getElementsByClassName('Button');
+        let buttobj=document.querySelectorAll( '#Button div')
+            for(i=0;i<ButtonObj.length;i++){
+                ButtonObj[i].setAttribute('onclick', 'rators(this)');
+            }
+            for(i=0;i<buttobj.length;i++){
+                buttobj[i].setAttribute('onmouseout','normalImg(this)');
+                buttobj[i].setAttribute('onmouseover', 'hoverImg(this)');
+            }
+
+}
+        // 等于运算
+    function dengyu(){
+        let button_text=eval(document.querySelector('#Monitor').innerText)
+        document.querySelector('#Monitor').innerText=button_text
+}
+            //获取屏幕字符长度
+    function monitor_len(text){
+        if ((text.length)<20){
+            return true;
+        }
+}
+    // ac清空
+    function button_ac(){
+        const monitor_obj=document.querySelector('#Monitor') //获取屏幕的对象
+            document.querySelector('#Monitor').innerText=0;  
+            d=true     
+}
+    function operators(text,b_id,obj){  //判断运算符
+        let operator_idsarr=['%','/','*','-','+','.']
+        let operatorsarr=['%','/','*','-','+']
+        let operatarr=['*','-','+']
+        let str_1=text.slice(-1);
+            if (operator_idsarr.includes(str_1)&&operatorsarr.includes(b_id)&&b_id!='.'){
+                text=text.slice(0,text.length-1)+b_id;
+                obj.innerText=text;
+                // console.log(4)
+            }else if(text==0&&operatarr.includes(b_id)){
+                obj.innerText+=b_id;
+                // console.log(3)
+            }else if(text!='0'&&b_id!='.'){
+                obj.innerText+=b_id;
+                // console.log(2)
+            }else if(text==='0'&&(b_id!='/'&&b_id!='%'&&b_id!='.')){
+                obj.innerText=b_id;
+                // console.log(1)
+            }
+}
+    function operatosr_d(t,b,o){ //小数点判断
+        let arr=['%','/','*','-','+']
+        let s_1=t.slice(-1)
+            if(t==='0'&&b=="."){
+                // alert(3)
+                o.innerText+=b;
+                d=false
+            }else if(arr.includes(s_1)&&b=='.'){
+                // alert(1)
+                o.innerText+='0'+b
+                d=false
+            }else if (arr.includes(b)){
+                d=true
+                // alert(d)
+            }else if(b=='.'&&d){
+                o.innerText+=b;
+                d=false
+            }
+    }
+    function rators(button){
+        const monitor_obj=document.querySelector('#Monitor') //获取屏幕的对象
+        const button_id=button.getAttribute('id');   //获取按键对应的值
+        let monitor_text=monitor_obj.innerText; //屏幕text
+        let len=monitor_len(monitor_text); //取得屏幕长度
+        if(len&&button_id!='sc'){
+            operatosr_d(monitor_text,button_id,monitor_obj);
+            operators(monitor_text,button_id,monitor_obj);
+            // alert(d)
+        }else if(button_id==='sc'){
+            let mt=monitor_text.slice(0,-1)
+            monitor_obj.innerText=mt
+        }else if(button_id==='sc'&&monitor_text==='0'){
+            monitor_obj.innerText=''
+        }
+}
+    function hoverImg(button) {
+    // 鼠标悬停时的效果
+    button.style.transform = 'scale(1.1)'; // 放大
+    button.style.transition = 'all 0.2s ease'; // 平滑过渡
+
+    // 根据按钮类型调整背景颜色
+    if (button.getAttribute('name') === 'Special') {
+        button.style.backgroundColor = 'rgb(200, 200, 200)';
+    } else if (button.getAttribute('name') === 'Operators') {
+        button.style.backgroundColor = 'rgb(255, 180, 50)';
+    } else if (button.getAttribute('name') === 'Number') {
+        button.style.backgroundColor = 'rgb(80, 80, 80)';
+    }
+}
+    function normalImg(button) {
+    // 恢复原始样式
+    button.style.transform = 'scale(1)'; // 恢复大小
+    button.style.transition = 'all 0.2s ease';
+
+    // 恢复原始背景颜色
+    if (button.getAttribute('name') === 'Special') {
+        button.style.backgroundColor = 'rgb(165, 165, 165)';
+    } else if (button.getAttribute('name') === 'Operators') {
+        button.style.backgroundColor = 'rgb(255, 159, 10)';
+    } else if (button.getAttribute('name') === 'Number') {
+        button.style.backgroundColor = 'rgb(51, 51, 51)';
+    }
+}
+     var d=true
+</script>
+<body onload="addon()">
+    <div id="box"> <!--计算器的大div-->
+    <div id="Status_Bar"> <!--状态栏-->
+        <div id="time"></div>
+    </div>
+    <div id="Monitor">0</div><!--计算器屏幕-->
+    <div id="Button"> <!--计算器按钮-->
+        <div class="Button2" name="Special" id="AC" onclick="button_ac()">AC</div>
+        <div class="Button xy" name="Special" id="**">x<sup>y</sup></div>
+        <div class="Button" name="Special" id="%">%</div>
+        <div class="Button" name="Operators" id="/">&div;</div>
+        <div class="Button" name="Number" id="7">7</div>
+        <div class="Button" name="Number" id="8">8</div>
+        <div class="Button" name="Number" id="9">9</div>
+        <div class="Button" name="Operators" id="*">&times;</div>
+        <div class="Button" name="Number" id="4">4</div>
+        <div class="Button" name="Number" id="5">5</div>
+        <div class="Button" name="Number" id="6">6</div>
+        <div class="Button" name="Operators" id="-">−</div>
+        <div class="Button" name="Number" id="1">1</div>
+        <div class="Button" name="Number" id="2">2</div>
+        <div class="Button" name="Number" id="3">3</div>
+        <div class="Button" name="Operators" id="+">+</div>
+        <div class="Button" name="Number" id="sc">&#x232B;</div>
+        <div class="Button" name="Number" id="0">0</div>
+        <div class="Button" name="Number" id=".">.</div>
+        <div class="Button1" name="Operators" id="=" onclick="dengyu()">=</div>
+    </div>
+    </div>
+</body>
+</html>
